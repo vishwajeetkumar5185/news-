@@ -57,11 +57,39 @@
 
                     <div class="latest-grid">
                         <?php
-                        // Fetch API news
-                        $apiNews = fetchExternalNews('', 10);
                         $allNews = array();
                         
-                        // Add API news to array
+                        // First, fetch admin uploaded news from 'news' table
+                        $adminNews = $conn->query("SELECT n.*, c.name as category_name 
+                                                   FROM news n 
+                                                   LEFT JOIN categories c ON n.category_id = c.id 
+                                                   ORDER BY n.created_at DESC 
+                                                   LIMIT 10");
+                        
+                        if ($adminNews && $adminNews->num_rows > 0) {
+                            while ($news = $adminNews->fetch_assoc()) {
+                                // Extract YouTube video ID if exists
+                                $youtube_id = '';
+                                if ($news['youtube_url']) {
+                                    preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $news['youtube_url'], $matches);
+                                    $youtube_id = $matches[1] ?? '';
+                                }
+                                
+                                $allNews[] = array(
+                                    'type' => 'admin',
+                                    'id' => $news['id'],
+                                    'title' => $news['title'],
+                                    'subtitle' => $news['subtitle'],
+                                    'image' => $news['image'],
+                                    'youtube_id' => $youtube_id,
+                                    'category' => $news['category_name'] ? $news['category_name'] : 'News',
+                                    'pubDate' => $news['created_at']
+                                );
+                            }
+                        }
+                        
+                        // Then, fetch API news
+                        $apiNews = fetchExternalNews('', 15);
                         if (isset($apiNews['results']) && count($apiNews['results']) > 0) {
                             foreach ($apiNews['results'] as $article) {
                                 $allNews[] = array(
@@ -76,60 +104,38 @@
                             }
                         }
                         
-                        // Fetch admin uploaded videos/news
-                        $adminVideos = $conn->query("SELECT * FROM videos WHERE status=1 ORDER BY created_at DESC LIMIT 5");
-                        if ($adminVideos && $adminVideos->num_rows > 0) {
-                            while ($video = $adminVideos->fetch_assoc()) {
-                                // Extract YouTube video ID
-                                $youtube_id = '';
-                                if ($video['youtube_url']) {
-                                    preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $video['youtube_url'], $matches);
-                                    $youtube_id = $matches[1] ?? '';
-                                }
-                                
-                                $allNews[] = array(
-                                    'type' => 'video',
-                                    'id' => $video['id'],
-                                    'title' => $video['title'],
-                                    'description' => '',
-                                    'image_url' => $video['thumbnail'] ? 'uploads/' . $video['thumbnail'] : '',
-                                    'video_file' => $video['video_file'],
-                                    'youtube_id' => $youtube_id,
-                                    'category' => 'Video',
-                                    'pubDate' => $video['created_at']
-                                );
-                            }
-                        }
-                        
                         // Display all news
                         if (count($allNews) > 0) {
                             foreach ($allNews as $item) {
                         ?>
                             <article class="latest-card">
-                                <?php if ($item['type'] == 'video'): ?>
-                                    <!-- Video Card -->
-                                    <div class="latest-card-link" style="cursor: pointer;" onclick="openVideoPopup('<?php echo $item['youtube_id'] ? $item['youtube_id'] : 'uploads/' . $item['video_file']; ?>', '<?php echo $item['youtube_id'] ? 'youtube' : 'file'; ?>')">
-                                        <div class="latest-card-image video-preview">
-                                            <?php if ($item['youtube_id']): ?>
+                                <?php if ($item['type'] == 'admin'): ?>
+                                    <!-- Admin News Card -->
+                                    <a href="single.php?id=<?php echo $item['id']; ?>" class="latest-card-link">
+                                        <div class="latest-card-image">
+                                            <?php if (!empty($item['image'])): ?>
+                                                <img src="uploads/<?php echo $item['image']; ?>" alt="<?php echo $item['title']; ?>">
+                                            <?php elseif ($item['youtube_id']): ?>
                                                 <img src="https://img.youtube.com/vi/<?php echo $item['youtube_id']; ?>/maxresdefault.jpg" alt="<?php echo $item['title']; ?>">
-                                            <?php elseif ($item['image_url']): ?>
-                                                <img src="<?php echo $item['image_url']; ?>" alt="<?php echo $item['title']; ?>">
                                             <?php else: ?>
-                                                <img src="https://via.placeholder.com/800x300?text=Video" alt="<?php echo $item['title']; ?>">
+                                                <img src="https://via.placeholder.com/800x300?text=News" alt="No Image">
                                             <?php endif; ?>
-                                            <div class="video-play-overlay">
-                                                <div class="play-button">▶</div>
+                                            <div class="card-overlay">
+                                                <span class="read-more">Read More →</span>
                                             </div>
                                         </div>
                                         <div class="latest-card-content">
-                                            <span class="card-category">Video</span>
+                                            <span class="card-category"><?php echo ucfirst($item['category']); ?></span>
                                             <h3><?php echo $item['title']; ?></h3>
+                                            <?php if ($item['subtitle']): ?>
+                                                <p><?php echo substr($item['subtitle'], 0, 200); ?>...</p>
+                                            <?php endif; ?>
                                             <div class="card-footer">
                                                 <span class="card-date"><?php echo date('M d, Y h:i A', strtotime($item['pubDate'])); ?></span>
-                                                <span class="card-source">Admin Upload</span>
+                                                <span class="card-source">Live18 India</span>
                                             </div>
                                         </div>
-                                    </div>
+                                    </a>
                                 <?php else: ?>
                                     <!-- API News Card -->
                                     <a href="<?php echo $item['link']; ?>" target="_blank" class="latest-card-link">
@@ -158,7 +164,7 @@
                         <?php
                             }
                         } else {
-                            echo '<p style="text-align: center; padding: 40px;">No news available at the moment.</p>';
+                            echo '<p style="text-align: center; padding: 40px; color: #999;">No news available at the moment.</p>';
                         }
                         ?>
                     </div>
