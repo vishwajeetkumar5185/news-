@@ -1,0 +1,53 @@
+# Uploads folder - contains user uploaded files
+uploads/
+
+# Keep the uploads directory structure but ignore contents
+!uploads/.gitkeep
+
+# Environment files
+.env
+.env.local
+
+# Database configuration (if contains sensitive info)
+# config/database.php
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Log files
+*.log
+error_log
+debug.log
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Cache directories
+cache/
+tmp/
+temp/
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Composer (if using)
+/vendor/
+
+# Node modules (if using)
+node_modules/
+package-lock.json
+yarn.lock
