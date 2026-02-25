@@ -139,8 +139,8 @@ $categories = getCategories($conn);
                         <a href="videos.php">Videos</a>
                         <a href="contact.php">Contact</a>
                         <a href="about.php">About</a>
-                        <?php if (!empty($settings['live_video_url'])): ?>
-                            <a href="#" class="notification-icon" onclick="openLiveVideo(event)">🔔</a>
+                        <?php if (!empty($settings['live_video_url']) && ($settings['live_status'] ?? 0) == 1): ?>
+                            <a href="#" class="notification-icon live-indicator-btn" onclick="openLiveVideo(event)">🔴 LIVE</a>
                         <?php endif; ?>
                     </nav>
                     <div class="header-actions">
@@ -190,20 +190,95 @@ $categories = getCategories($conn);
     </header>
 
     <!-- Live Video Popup -->
-    <?php if (!empty($settings['live_video_url'])): ?>
+    <?php if (!empty($settings['live_video_url']) && ($settings['live_status'] ?? 0) == 1): ?>
     <div id="liveVideoModal" class="video-modal">
         <div class="video-modal-content">
             <span class="video-close" onclick="closeLiveVideo()">&times;</span>
-            <h3>🔴 LIVE NOW</h3>
+            <h3>🔴 LIVE NOW - Live 18 India</h3>
             <div class="video-wrapper">
                 <?php if (strpos($settings['live_video_url'], 'youtube.com') !== false || strpos($settings['live_video_url'], 'youtu.be') !== false): 
-                    preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $settings['live_video_url'], $matches);
-                    $youtube_id = $matches[1] ?? '';
-                ?>
-                    <iframe src="https://www.youtube.com/embed/<?php echo $youtube_id; ?>?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    // Multiple patterns for different YouTube URL formats
+                    $youtube_id = '';
+                    $is_live_url = false;
+                    
+                    // Pattern 1: youtube.com/watch?v=VIDEO_ID
+                    if (preg_match('/(?:youtube\.com\/watch\?v=)([a-zA-Z0-9_-]{11})/', $settings['live_video_url'], $matches)) {
+                        $youtube_id = $matches[1];
+                    }
+                    // Pattern 2: youtu.be/VIDEO_ID
+                    elseif (preg_match('/(?:youtu\.be\/)([a-zA-Z0-9_-]{11})/', $settings['live_video_url'], $matches)) {
+                        $youtube_id = $matches[1];
+                    }
+                    // Pattern 3: youtube.com/embed/VIDEO_ID
+                    elseif (preg_match('/(?:youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/', $settings['live_video_url'], $matches)) {
+                        $youtube_id = $matches[1];
+                    }
+                    // Pattern 4: youtube.com/v/VIDEO_ID
+                    elseif (preg_match('/(?:youtube\.com\/v\/)([a-zA-Z0-9_-]{11})/', $settings['live_video_url'], $matches)) {
+                        $youtube_id = $matches[1];
+                    }
+                    // Pattern 5: youtube.com/live/VIDEO_ID (for live streams)
+                    elseif (preg_match('/(?:youtube\.com\/live\/)([a-zA-Z0-9_-]{11})/', $settings['live_video_url'], $matches)) {
+                        $youtube_id = $matches[1];
+                        $is_live_url = true;
+                    }
+                    
+                    if ($youtube_id): ?>
+                        <div style="position: relative;">
+                            <iframe 
+                                id="youtube-iframe"
+                                src="https://www.youtube.com/embed/<?php echo $youtube_id; ?>?autoplay=0&mute=0&rel=0&modestbranding=1" 
+                                width="600" 
+                                height="338" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen
+                                style="border-radius: 8px;">
+                            </iframe>
+                            
+                            <!-- Fallback message for unavailable videos -->
+                            <div id="video-fallback" style="position: absolute; top: 0; left: 0; width: 600px; height: 338px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: none; align-items: center; justify-content: center; border-radius: 8px; color: white; z-index: 10;">
+                                <div style="text-align: center; padding: 30px;">
+                                    <div style="font-size: 36px; margin-bottom: 15px;">📺</div>
+                                    <h3 style="margin-bottom: 12px; font-size: 20px;">Live Stream Currently Offline</h3>
+                                    <p style="margin-bottom: 15px; opacity: 0.9; font-size: 14px;">The live stream is not available right now.</p>
+                                    <div style="background: rgba(255,255,255,0.2); padding: 12px; border-radius: 6px; margin-bottom: 15px; font-size: 12px;">
+                                        <strong>Video ID:</strong> <?php echo $youtube_id; ?><br>
+                                        <?php if ($is_live_url): ?>
+                                            <strong>Type:</strong> 🔴 Live Stream URL<br>
+                                        <?php endif; ?>
+                                        <strong>Status:</strong> Stream may have ended or not started yet
+                                    </div>
+                                    <button onclick="location.reload()" style="background: #fff; color: #333; padding: 8px 16px; border: none; border-radius: 15px; cursor: pointer; font-weight: 600; font-size: 12px;">
+                                        🔄 Refresh Page
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <script>
+                        // Simple approach - let YouTube iframe load normally
+                        // Don't automatically show fallback unless there's a real error
+                        function checkVideoAvailability() {
+                            // Do nothing - let YouTube handle video availability
+                            // The iframe will show YouTube's own error message if video is unavailable
+                        }
+                        </script>
+                    <?php else: ?>
+                        <div style="width: 600px; height: 338px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+                            <div style="text-align: center; color: #666;">
+                                <h3>❌ Invalid YouTube URL</h3>
+                                <p>Please check the YouTube URL in admin settings</p>
+                                <small>URL: <?php echo htmlspecialchars($settings['live_video_url']); ?></small>
+                            </div>
+                        </div>
+                    <?php endif; ?>
                 <?php else: ?>
-                    <video controls autoplay>
+                    <video controls width="600" height="338" style="border-radius: 8px;">
                         <source src="uploads/<?php echo $settings['live_video_url']; ?>" type="video/mp4">
+                        <div style="width: 600px; height: 338px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+                            <p>Your browser does not support the video tag.</p>
+                        </div>
                     </video>
                 <?php endif; ?>
             </div>
