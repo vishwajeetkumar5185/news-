@@ -169,3 +169,81 @@
         }
     }
     </script>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+        <a href="index.php" class="mobile-nav-item">
+            <div class="mobile-nav-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            </div>
+            <span class="mobile-nav-label">Home</span>
+        </a>
+        <a href="#" class="mobile-nav-item" onclick="openLiveTVModal(); return false;">
+            <div class="mobile-nav-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 6h-7.59l3.29-3.29L16 2l-4 4-4-4-.71.71L10.59 6H3c-1.1 0-2 .89-2 2v12c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.11-.9-2-2-2zm0 14H3V8h18v12zM9 10v8l7-4z"/></svg>
+            </div>
+            <span class="mobile-nav-label">Live TV</span>
+        </a>
+        <a href="latest.php" class="mobile-nav-item">
+            <div class="mobile-nav-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            </div>
+            <span class="mobile-nav-label">Latest</span>
+        </a>
+        <a href="videos.php" class="mobile-nav-item">
+            <div class="mobile-nav-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
+            </div>
+            <span class="mobile-nav-label">Videos</span>
+        </a>
+        <a href="contact.php" class="mobile-nav-item">
+            <div class="mobile-nav-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            </div>
+            <span class="mobile-nav-label">Contact</span>
+        </a>
+        <a href="about.php" class="mobile-nav-item">
+            <div class="mobile-nav-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            </div>
+            <span class="mobile-nav-label">About</span>
+        </a>
+    </nav>
+
+    <!-- Live TV Modal -->
+    <div id="liveTVModal" class="video-modal" style="display: none;">
+        <div class="video-modal-content">
+            <span class="video-close" onclick="closeLiveTVModal()">&times;</span>
+            <h3 style="color: #fff; margin-bottom: 20px;">📺 Live TV</h3>
+            <div id="liveTVContainer">
+                <!-- Add your live TV embed here -->
+                <iframe width="100%" height="500" src="https://www.youtube.com/embed/live_stream?channel=YOUR_CHANNEL_ID" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function openLiveTVModal() {
+        const modal = document.getElementById('liveTVModal');
+        modal.style.display = 'flex';
+    }
+    
+    function closeLiveTVModal() {
+        const modal = document.getElementById('liveTVModal');
+        const container = document.getElementById('liveTVContainer');
+        modal.style.display = 'none';
+        // Reload iframe to stop video
+        const iframe = container.querySelector('iframe');
+        if (iframe) {
+            iframe.src = iframe.src;
+        }
+    }
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('liveTVModal');
+        if (event.target == modal) {
+            closeLiveTVModal();
+        }
+    });
+    </script>

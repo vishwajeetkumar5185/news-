@@ -20,15 +20,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $upload_path = '../uploads/' . $logo;
             
             if (move_uploaded_file($_FILES['logo']['tmp_name'], $upload_path)) {
-                $stmt = $conn->prepare("UPDATE settings SET logo=?, site_name=?, breaking_news=?, footer_text=?, about_content=?, live_video_url=? WHERE id=1");
-                $stmt->bind_param("ssssss", $logo, $site_name, $breaking_news, $footer_text, $about_content, $live_video_url);
-                $stmt->execute();
+                // Check if live_video_url column exists
+                $columns = $conn->query("SHOW COLUMNS FROM settings LIKE 'live_video_url'");
+                if ($columns->num_rows > 0) {
+                    $stmt = $conn->prepare("UPDATE settings SET logo=?, site_name=?, breaking_news=?, footer_text=?, about_content=?, live_video_url=? WHERE id=1");
+                    if ($stmt) {
+                        $stmt->bind_param("ssssss", $logo, $site_name, $breaking_news, $footer_text, $about_content, $live_video_url);
+                        $stmt->execute();
+                    }
+                } else {
+                    $stmt = $conn->prepare("UPDATE settings SET logo=?, site_name=?, breaking_news=?, footer_text=?, about_content=? WHERE id=1");
+                    if ($stmt) {
+                        $stmt->bind_param("sssss", $logo, $site_name, $breaking_news, $footer_text, $about_content);
+                        $stmt->execute();
+                    }
+                }
             }
         }
     } else {
-        $stmt = $conn->prepare("UPDATE settings SET site_name=?, breaking_news=?, footer_text=?, about_content=?, live_video_url=? WHERE id=1");
-        $stmt->bind_param("sssss", $site_name, $breaking_news, $footer_text, $about_content, $live_video_url);
-        $stmt->execute();
+        // Check if live_video_url column exists
+        $columns = $conn->query("SHOW COLUMNS FROM settings LIKE 'live_video_url'");
+        if ($columns->num_rows > 0) {
+            $stmt = $conn->prepare("UPDATE settings SET site_name=?, breaking_news=?, footer_text=?, about_content=?, live_video_url=? WHERE id=1");
+            if ($stmt) {
+                $stmt->bind_param("sssss", $site_name, $breaking_news, $footer_text, $about_content, $live_video_url);
+                $stmt->execute();
+            }
+        } else {
+            $stmt = $conn->prepare("UPDATE settings SET site_name=?, breaking_news=?, footer_text=?, about_content=? WHERE id=1");
+            if ($stmt) {
+                $stmt->bind_param("ssss", $site_name, $breaking_news, $footer_text, $about_content);
+                $stmt->execute();
+            }
+        }
     }
     
     header('Location: settings.php');
