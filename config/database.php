@@ -14,7 +14,7 @@ function getConnection() {
     return $conn;
 }
 
-// External News API Configuration (newsdata.io)
-define('NEWS_API_KEY', 'pub_68aacb1d3dc64f788c947bc7779ddce2');
-define('NEWS_API_URL', 'https://newsdata.io/api/1/latest');
+// External News API Configuration (The Lallantop)
+define('LALLANTOP_API_URL', 'https://api.thelallantop.com/v1/web/postListByCategory');
+define('NEWS_API_KEY', 'pub_68aacb1d3dc64f788c947bc7779ddce2'); // Keep old key as backup
 ?>

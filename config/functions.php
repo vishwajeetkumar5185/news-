@@ -1,28 +1,145 @@
 <?php
-// Fetch news from external API (newsdata.io)
-function fetchExternalNews($category = '', $limit = 10) {
-    // Free plan allows max 10 results
-    if ($limit > 10) {
-        $limit = 10;
+// Fetch news from external API (The Lallantop) with fallback
+function fetchExternalNews($category = 'india', $limit = 9, $skip = 4) {
+    // Try The Lallantop API first
+    $lallantop_news = fetchLallantopNews($category, $limit, $skip);
+    if (!empty($lallantop_news['results'])) {
+        return $lallantop_news;
     }
     
-    $url = NEWS_API_URL . "?apikey=" . NEWS_API_KEY . "&q=india%20news&language=en";
-    if ($category) {
-        $url .= "&category=" . $category;
-    }
-    
-    // Only add size parameter if limit is less than 10
-    if ($limit < 10) {
-        $url .= "&size=" . $limit;
-    }
+    // Fallback to RSS feed if Lallantop fails
+    return fetchRSSFallback($limit);
+}
+
+// Primary function for The Lallantop API
+function fetchLallantopNews($category = 'india', $limit = 9, $skip = 4) {
+    $url = LALLANTOP_API_URL . "/" . $category . "?limit=" . $limit . "&skip=" . $skip . "&type=video,text,liveblog";
     
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Accept: application/json',
+        'Content-Type: application/json'
+    ]);
+    
     $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $error = curl_error($ch);
     curl_close($ch);
     
-    return json_decode($response, true);
+    if ($httpCode !== 200 || !$response || $error) {
+        error_log("Lallantop API Error: HTTP $httpCode, Error: $error, URL: $url");
+        return ['results' => []];
+    }
+    
+    $data = json_decode($response, true);
+    
+    if (isset($data['data']) && is_array($data['data'])) {
+        $results = [];
+        foreach ($data['data'] as $item) {
+            $image_url = $item['featured_image'] ?? $item['image'] ?? $item['thumbnail'] ?? '';
+            $description = $item['excerpt'] ?? $item['summary'] ?? $item['description'] ?? '';
+            $pubDate = $item['created_at'] ?? $item['published_at'] ?? $item['date'] ?? date('Y-m-d H:i:s');
+            
+            $results[] = [
+                'title' => $item['title'] ?? 'No Title',
+                'link' => isset($item['slug']) ? 'https://www.thelallantop.com/' . $item['slug'] : ($item['url'] ?? '#'),
+                'description' => strip_tags($description),
+                'image_url' => $image_url,
+                'pubDate' => $pubDate,
+                'category' => [$category],
+                'source' => 'The Lallantop'
+            ];
+        }
+        return ['results' => $results];
+    }
+    
+    return ['results' => []];
+}
+
+// Fallback RSS function for when APIs fail
+function fetchRSSFallback($limit = 9) {
+    $rss_feeds = [
+        'https://feeds.feedburner.com/ndtvnews-top-stories',
+        'https://timesofindia.indiatimes.com/rssfeedstopstories.cms',
+        'https://www.hindustantimes.com/feeds/rss/india-news/index.xml'
+    ];
+    
+    foreach ($rss_feeds as $rssUrl) {
+        $articles = fetchSingleRSSFeed($rssUrl, $limit);
+        if (!empty($articles)) {
+            return ['results' => $articles];
+        }
+    }
+    
+    return ['results' => []];
+}
+
+// Helper function to fetch from a single RSS feed
+function fetchSingleRSSFeed($rssUrl, $limit = 9) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $rssUrl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $xmlContent = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    
+    if ($httpCode !== 200 || !$xmlContent) {
+        return [];
+    }
+    
+    $xml = simplexml_load_string($xmlContent);
+    if (!$xml) {
+        return [];
+    }
+    
+    $articles = [];
+    $count = 0;
+    
+    foreach ($xml->channel->item as $item) {
+        if ($count >= $limit) break;
+        
+        $image = '';
+        if (isset($item->children('media', true)->content)) {
+            $image = (string)$item->children('media', true)->content->attributes()->url;
+        }
+        
+        $articles[] = [
+            'title' => (string)$item->title,
+            'link' => (string)$item->link,
+            'description' => strip_tags((string)$item->description),
+            'image_url' => $image,
+            'pubDate' => (string)$item->pubDate,
+            'category' => ['india'],
+            'source' => 'RSS Feed'
+        ];
+        
+        $count++;
+    }
+    
+    return $articles;
+}
+
+// Get available categories for Lallantop API
+function getLallantopCategories() {
+    return [
+        'india' => 'India',
+        'world' => 'World',
+        'politics' => 'Politics',
+        'sports' => 'Sports',
+        'entertainment' => 'Entertainment',
+        'business' => 'Business',
+        'technology' => 'Technology',
+        'health' => 'Health'
+    ];
 }
 
 // Fetch news from RSS feed
