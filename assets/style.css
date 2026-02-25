@@ -245,11 +245,99 @@ footer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; hei
 }
 
 @media (max-width: 768px) {
+    /* Header Responsive */
+    .top-header { padding: 6px 0; }
+    .top-left { font-size: 11px; gap: 10px; }
+    .top-right { gap: 5px; }
+    .btn-download, .btn-watch-live { padding: 5px 10px; font-size: 11px; }
+    
+    .main-header { padding: 10px 0; }
+    .header-content { flex-direction: column; gap: 15px; }
+    .logo img { height: 35px; }
+    .logo-text { font-size: 24px; }
+    
+    .main-nav { 
+        width: 100%; 
+        overflow-x: auto; 
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+    .main-nav::-webkit-scrollbar { display: none; }
+    .main-nav a { 
+        font-size: 12px; 
+        padding: 8px 12px; 
+        white-space: nowrap;
+    }
+    
+    .header-actions { 
+        width: 100%; 
+        justify-content: space-between; 
+    }
+    .search-btn { 
+        flex: 1; 
+        padding: 8px 12px; 
+        font-size: 12px; 
+        text-align: center;
+    }
+    .signin-btn { 
+        padding: 8px 16px; 
+        font-size: 12px; 
+    }
+    
+    /* Hide trending bar on mobile */
+    .trending-bar { display: none; }
+    
+    .breaking-news { padding: 8px 0; }
+    .breaking-text { font-size: 13px; }
+    
+    /* Sticky header adjustments */
+    body.header-sticky { padding-top: 60px; }
+    
+    /* Content */
     .home-layout { grid-template-columns: 1fr; }
     .right-sidebar { display: none; }
     .main-nav { overflow-x: auto; }
     .section-title { font-size: 22px; }
     .filter-tabs { overflow-x: auto; }
+}
+
+@media (max-width: 480px) {
+    /* Extra small phones */
+    .top-header .container { flex-direction: column; gap: 8px; align-items: flex-start; }
+    .top-left { width: 100%; justify-content: space-between; }
+    .top-right { width: 100%; }
+    
+    .logo-text { font-size: 20px; }
+    .logo img { height: 30px; }
+    
+    .main-nav a { 
+        font-size: 11px; 
+        padding: 6px 10px; 
+    }
+    
+    .search-btn { font-size: 11px; padding: 6px 10px; }
+    .signin-btn { font-size: 11px; padding: 6px 12px; }
+    
+    .breaking-label { font-size: 11px; padding: 4px 10px; }
+    .breaking-text { font-size: 12px; }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    /* Tablet styles */
+    .main-nav { 
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .main-nav a { font-size: 12px; padding: 10px 12px; }
+    
+    .header-actions { gap: 8px; }
+    .search-btn { padding: 7px 12px; font-size: 12px; }
+    .signin-btn { padding: 7px 16px; font-size: 12px; }
+    
+    /* Hide trending bar on tablet */
+    .trending-bar { display: none; }
 }
 
 
