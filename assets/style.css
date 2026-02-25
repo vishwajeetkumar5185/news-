@@ -28,6 +28,7 @@ body.header-sticky { padding-top: 70px; }
 /* Remove extra padding */
 .home-wrapper { padding-top: 30px; }
 .header-content { display: flex; justify-content: space-between; align-items: center; }
+.logo-link { text-decoration: none; display: inline-block; }
 .logo-text { display: flex; align-items: center; font-size: 32px; font-weight: 900; }
 .logo-news { color: #000; background: #000; color: #fff; padding: 5px 10px; }
 .logo-number { color: #fff; background: #e53935; padding: 5px 10px; }
