@@ -144,7 +144,10 @@ $categories = getCategories($conn);
                         <?php endif; ?>
                     </nav>
                     <div class="header-actions">
-                        <button class="search-btn">🔍 Ask Live 18 India</button>
+                        <button class="search-btn" onclick="window.location.href='contact.php'">
+                            <span class="search-icon">🔍</span>
+                            <span class="search-text">Ask Live 18 India</span>
+                        </button>
                         <a href="admin/login.php" class="signin-btn">Sign in</a>
                     </div>
                 </div>
