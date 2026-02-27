@@ -15,6 +15,7 @@
                 <a href="categories.php">Categories</a>
                 <a href="news.php">News</a>
                 <a href="videos.php">Videos</a>
+                <a href="contact-info.php">Contact Info</a>
                 <a href="settings.php">Settings</a>
                 <a href="messages.php">Messages</a>
                 <a href="logout.php">Logout</a>

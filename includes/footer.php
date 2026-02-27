@@ -63,39 +63,63 @@
                     </div>
                     
                     <!-- Right Section: Contact Card -->
+                    <?php 
+                    // Get dynamic contact information
+                    $contact_info = $conn->query("SELECT * FROM contact_info WHERE id = 1")->fetch_assoc();
+                    ?>
                     <div class="footer-contact-card">
                         <div class="contact-card-header">
                             <span class="contact-icon">📞</span>
                             <h4>Get In Touch</h4>
                         </div>
                         <div class="contact-details">
-                            <div class="contact-item">
-                                <span class="icon">👤</span>
-                                <div class="info">
-                                    <strong>Rakesh Rajendra Singh</strong>
-                                    <small>DoB: 16-01-1990</small>
-                                </div>
-                            </div>
-                            <div class="contact-item">
-                                <span class="icon">📱</span>
-                                <div class="info">
-                                    <a href="tel:9619501369">+91 9619501369</a>
-                                </div>
-                            </div>
+                            <?php if (!empty($contact_info['office_address'])): ?>
                             <div class="contact-item">
                                 <span class="icon">📍</span>
                                 <div class="info">
-                                    <p>Flat 302, Venkatesh Appartment<br>
-                                    Near Raval Nagar, Behind Station Road<br>
-                                    Mira Road East, Mumbai<br>
-                                    Maharashtra - 401107</p>
-                                    <small>Landmark: Mira Road Station Bhaji Market</small>
+                                    <strong>Office Address</strong>
+                                    <p><?php echo nl2br(htmlspecialchars($contact_info['office_address'])); ?></p>
                                 </div>
                             </div>
+                            <?php endif; ?>
+                            
+                            <?php if (!empty($contact_info['phone_number'])): ?>
+                            <div class="contact-item">
+                                <span class="icon">📱</span>
+                                <div class="info">
+                                    <strong>Phone</strong>
+                                    <p><a href="tel:<?php echo str_replace([' ', '-', '(', ')'], '', $contact_info['phone_number']); ?>"><?php echo htmlspecialchars($contact_info['phone_number']); ?></a></p>
+                                </div>
+                            </div>
+                            <?php endif; ?>
+                            
+                            <?php if (!empty($contact_info['email'])): ?>
+                            <div class="contact-item">
+                                <span class="icon">✉️</span>
+                                <div class="info">
+                                    <strong>Email</strong>
+                                    <p><a href="mailto:<?php echo htmlspecialchars($contact_info['email']); ?>"><?php echo htmlspecialchars($contact_info['email']); ?></a></p>
+                                </div>
+                            </div>
+                            <?php endif; ?>
+                            
+                            <?php if (!empty($contact_info['visit_us_text'])): ?>
+                            <div class="contact-item">
+                                <span class="icon">🏢</span>
+                                <div class="info">
+                                    <strong>Visit Us</strong>
+                                    <p><?php echo nl2br(htmlspecialchars($contact_info['visit_us_text'])); ?></p>
+                                </div>
+                            </div>
+                            <?php endif; ?>
                         </div>
+                        
+                        <?php if (!empty($contact_info['map_embed_url'])): ?>
                         <div class="footer-map-embed">
-                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3766.8!2d72.8577!3d19.2812!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7b0e57647e5e5%3A0x1234567890abcdef!2sMira%20Road%20East%2C%20Mumbai%2C%20Maharashtra%20401107!5e0!3m2!1sen!2sin!4v1234567890" width="100%" height="180" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                            <h5 style="color: #fff; margin-bottom: 10px; font-size: 14px;">🗺️ Find Us on Map</h5>
+                            <?php echo $contact_info['map_embed_url']; ?>
                         </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
