@@ -2,9 +2,50 @@
 require_once 'config/database.php';
 require_once 'config/functions.php';
 
-$pageTitle = "Terms of Use - Live 18 India";
+// SEO Meta Data for Terms of Use
+$pageTitle = "Terms of Use - Live 18 India | Website Terms & Conditions";
+$pageDescription = "Read Live 18 India's Terms of Use to understand the rules and guidelines for using our website and services. Learn about user responsibilities and website policies.";
+$pageKeywords = "terms of use, terms and conditions, website terms, Live 18 India terms, user agreement, website policies, legal terms";
+$canonicalUrl = "https://live18india.com/terms-of-use.php";
+
+// Open Graph Meta Tags
+$ogTitle = "Terms of Use - Live 18 India";
+$ogDescription = "Understand the terms and conditions for using Live 18 India website and services. Read our comprehensive terms of use policy.";
+$ogImage = "https://live18india.com/assets/images/terms-of-use.jpg";
+$ogUrl = $canonicalUrl;
+$ogType = "website";
+
+// Twitter Card Meta Tags
+$twitterTitle = $ogTitle;
+$twitterDescription = $ogDescription;
+$twitterImage = $ogImage;
+
+// Schema.org JSON-LD for Terms of Use
+$schemaData = [
+    "@context" => "https://schema.org",
+    "@type" => "WebPage",
+    "name" => "Terms of Use",
+    "description" => $pageDescription,
+    "url" => $canonicalUrl,
+    "publisher" => [
+        "@type" => "NewsMediaOrganization",
+        "name" => "Live 18 India",
+        "url" => "https://live18india.com"
+    ],
+    "dateModified" => date('c'),
+    "inLanguage" => "en-IN"
+];
+
+// Set page category for analytics
+$pageCategory = 'terms_of_use';
+
 include 'includes/header.php';
 ?>
+
+<!-- Schema.org JSON-LD for Terms of Use -->
+<script type="application/ld+json">
+<?php echo json_encode($schemaData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES); ?>
+</script>
 
 <div class="legal-page">
     <div class="container">

@@ -1,6 +1,67 @@
 <?php 
+// SEO Meta Data for Latest News Page
+$pageTitle = "Latest News - Breaking News & Recent Updates | Live 18 India";
+$pageDescription = "Stay updated with latest breaking news and recent updates from Live 18 India. Get real-time news coverage on politics, sports, entertainment, business, and more from India and around the world.";
+$pageKeywords = "latest news, breaking news, recent updates, current news, today news, Live 18 India news, real-time news, India news updates, world news";
+$canonicalUrl = "https://live18india.com/latest.php";
+
+// Open Graph Meta Tags
+$ogTitle = "Latest Breaking News & Updates - Live 18 India";
+$ogDescription = "Get the latest breaking news and updates from India's most trusted news source. Real-time coverage of politics, sports, entertainment, business and more.";
+$ogImage = "https://live18india.com/assets/images/latest-news.jpg";
+$ogUrl = $canonicalUrl;
+$ogType = "website";
+
+// Twitter Card Meta Tags
+$twitterTitle = $ogTitle;
+$twitterDescription = $ogDescription;
+$twitterImage = $ogImage;
+
+// Schema.org JSON-LD for Latest News Page
+$schemaData = [
+    "@context" => "https://schema.org",
+    "@type" => "CollectionPage",
+    "name" => "Latest News - Live 18 India",
+    "description" => $pageDescription,
+    "url" => $canonicalUrl,
+    "mainEntity" => [
+        "@type" => "ItemList",
+        "name" => "Latest News Articles",
+        "description" => "Collection of latest news articles from Live 18 India"
+    ],
+    "publisher" => [
+        "@type" => "NewsMediaOrganization",
+        "name" => "Live 18 India",
+        "url" => "https://live18india.com"
+    ],
+    "breadcrumb" => [
+        "@type" => "BreadcrumbList",
+        "itemListElement" => [
+            [
+                "@type" => "ListItem",
+                "position" => 1,
+                "name" => "Home",
+                "item" => "https://live18india.com"
+            ],
+            [
+                "@type" => "ListItem",
+                "position" => 2,
+                "name" => "Latest News"
+            ]
+        ]
+    ]
+];
+
+// Set page category for analytics
+$pageCategory = 'latest_news';
+
 include 'includes/header.php';
 ?>
+
+<!-- Schema.org JSON-LD for Latest News Page -->
+<script type="application/ld+json">
+<?php echo json_encode($schemaData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES); ?>
+</script>
 
 <div class="latest-page">
     <div class="container">

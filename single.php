@@ -1,5 +1,7 @@
 <?php 
-include 'includes/header.php';
+require_once 'config/database.php';
+require_once 'config/functions.php';
+$conn = getConnection();
 
 $id = $_GET['id'] ?? 0;
 $news = $conn->query("SELECT n.*, c.name as category_name FROM news n LEFT JOIN categories c ON n.category_id = c.id WHERE n.id = $id")->fetch_assoc();
@@ -8,7 +10,141 @@ if (!$news) {
     header('Location: index.php');
     exit;
 }
+
+// SEO Meta Data for News Article
+$pageTitle = "{$news['title']} | Live 18 India";
+$pageDescription = !empty($news['subtitle']) ? $news['subtitle'] : substr(strip_tags($news['content']), 0, 160) . "...";
+$pageKeywords = "{$news['category_name']}, {$news['title']}, Live 18 India, news, breaking news, " . str_replace(' ', ', ', $news['title']);
+$canonicalUrl = "https://live18india.com/single.php?id={$news['id']}";
+
+// Open Graph Meta Tags for Article
+$ogTitle = $news['title'];
+$ogDescription = $pageDescription;
+$ogImage = "https://live18india.com/uploads/{$news['image']}";
+$ogUrl = $canonicalUrl;
+$ogType = "article";
+
+// Twitter Card Meta Tags
+$twitterTitle = $ogTitle;
+$twitterDescription = $ogDescription;
+$twitterImage = $ogImage;
+
+// Article-specific meta tags
+$articlePublishedTime = date('c', strtotime($news['created_at']));
+$articleModifiedTime = date('c', strtotime($news['created_at']));
+$articleAuthor = "Live 18 India";
+$articleSection = $news['category_name'];
+$articleTags = $news['category_name'] . ", news, breaking news";
+
+// Schema.org JSON-LD for News Article
+$schemaData = [
+    "@context" => "https://schema.org",
+    "@type" => "NewsArticle",
+    "headline" => $news['title'],
+    "description" => $pageDescription,
+    "image" => [
+        "@type" => "ImageObject",
+        "url" => $ogImage,
+        "width" => 1200,
+        "height" => 630
+    ],
+    "datePublished" => $articlePublishedTime,
+    "dateModified" => $articleModifiedTime,
+    "author" => [
+        "@type" => "Organization",
+        "name" => $articleAuthor,
+        "url" => "https://live18india.com"
+    ],
+    "publisher" => [
+        "@type" => "NewsMediaOrganization",
+        "name" => "Live 18 India",
+        "url" => "https://live18india.com",
+        "logo" => [
+            "@type" => "ImageObject",
+            "url" => "https://live18india.com/assets/images/logo.png",
+            "width" => 200,
+            "height" => 60
+        ]
+    ],
+    "mainEntityOfPage" => [
+        "@type" => "WebPage",
+        "@id" => $canonicalUrl
+    ],
+    "articleSection" => $articleSection,
+    "keywords" => $articleTags,
+    "url" => $canonicalUrl,
+    "breadcrumb" => [
+        "@type" => "BreadcrumbList",
+        "itemListElement" => [
+            [
+                "@type" => "ListItem",
+                "position" => 1,
+                "name" => "Home",
+                "item" => "https://live18india.com"
+            ],
+            [
+                "@type" => "ListItem",
+                "position" => 2,
+                "name" => $news['category_name'],
+                "item" => "https://live18india.com/category.php?id={$news['category_id']}"
+            ],
+            [
+                "@type" => "ListItem",
+                "position" => 3,
+                "name" => $news['title']
+            ]
+        ]
+    ]
+];
+
+include 'includes/header.php';
+// Set page category for analytics
+$pageCategory = 'news_article';
 ?>
+
+<!-- Schema.org JSON-LD for News Article -->
+<script type="application/ld+json">
+<?php echo json_encode($schemaData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES); ?>
+</script>
+
+<!-- Track article view -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Track news article view
+    trackNewsView(
+        '<?php echo $news['id']; ?>', 
+        '<?php echo htmlspecialchars($news['category_name']); ?>', 
+        '<?php echo htmlspecialchars($news['title']); ?>'
+    );
+    
+    // Track reading time
+    let startTime = Date.now();
+    window.addEventListener('beforeunload', function() {
+        let readingTime = Math.round((Date.now() - startTime) / 1000);
+        gtag('event', 'reading_time', {
+            'article_id': '<?php echo $news['id']; ?>',
+            'reading_seconds': readingTime,
+            'event_category': 'Engagement',
+            'event_label': 'Article Reading Time'
+        });
+    });
+    
+    // Track social sharing clicks
+    document.querySelectorAll('.social-share a').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            let platform = this.className.includes('facebook') ? 'Facebook' : 
+                          this.className.includes('twitter') ? 'Twitter' : 
+                          this.className.includes('whatsapp') ? 'WhatsApp' : 'Other';
+            
+            trackSocialShare(
+                platform, 
+                window.location.href, 
+                '<?php echo htmlspecialchars($news['title']); ?>'
+            );
+        });
+    });
+});
+</script>
 
 <!-- Hero Section with Full-Width Image -->
 <div class="single-hero">

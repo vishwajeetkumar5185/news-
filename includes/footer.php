@@ -65,7 +65,40 @@
                     <!-- Right Section: Contact Card -->
                     <?php 
                     // Get dynamic contact information
-                    $contact_info = $conn->query("SELECT * FROM contact_info WHERE id = 1")->fetch_assoc();
+                    $contact_info = null;
+                    try {
+                        $contact_info = $conn->query("SELECT * FROM contact_info WHERE id = 1")->fetch_assoc();
+                    } catch (Exception $e) {
+                        // Fallback contact information
+                        $contact_info = [
+                            'phone_number' => '+91 8070111786',
+                            'email' => 'live18india2020@gmail.com',
+                            'office_address_line1' => 'Office No. 003',
+                            'office_address_line2' => 'New Raval Nagar, Building No. B',
+                            'office_address_line3' => 'Behind Hardik Palace Hotel',
+                            'office_city' => 'Mira Road East',
+                            'office_state' => 'Maharashtra',
+                            'office_pincode' => '401107',
+                            'office_landmark' => 'Station Road',
+                            'visit_us_text' => 'Visit our office for any inquiries'
+                        ];
+                    }
+                    
+                    // Ensure we have contact info (fallback if database fails)
+                    if (!$contact_info) {
+                        $contact_info = [
+                            'phone_number' => '+91 8070111786',
+                            'email' => 'live18india2020@gmail.com',
+                            'office_address_line1' => 'Office No. 003',
+                            'office_address_line2' => 'New Raval Nagar, Building No. B',
+                            'office_address_line3' => 'Behind Hardik Palace Hotel',
+                            'office_city' => 'Mira Road East',
+                            'office_state' => 'Maharashtra',
+                            'office_pincode' => '401107',
+                            'office_landmark' => 'Station Road',
+                            'visit_us_text' => 'Visit our office for any inquiries'
+                        ];
+                    }
                     ?>
                     <div class="footer-contact-card">
                         <div class="contact-card-header">
@@ -73,27 +106,30 @@
                             <h4>Get In Touch</h4>
                         </div>
                         <div class="contact-details">
-                            <?php if (!empty($contact_info['office_address'])): ?>
                             <div class="contact-item">
                                 <span class="icon">📍</span>
                                 <div class="info">
                                     <strong>Office Address</strong>
-                                    <p><?php echo nl2br(htmlspecialchars($contact_info['office_address'])); ?></p>
+                                    <p>
+                                        <?php echo htmlspecialchars($contact_info['office_address_line1']); ?><br>
+                                        <?php echo htmlspecialchars($contact_info['office_address_line2']); ?><br>
+                                        <?php echo htmlspecialchars($contact_info['office_address_line3']); ?><br>
+                                        <?php echo htmlspecialchars($contact_info['office_landmark']); ?><br>
+                                        <?php echo htmlspecialchars($contact_info['office_city']); ?><br>
+                                        Thane – <?php echo htmlspecialchars($contact_info['office_pincode']); ?><br>
+                                        <?php echo htmlspecialchars($contact_info['office_state']); ?>, India
+                                    </p>
                                 </div>
                             </div>
-                            <?php endif; ?>
                             
-                            <?php if (!empty($contact_info['phone_number'])): ?>
                             <div class="contact-item">
                                 <span class="icon">📱</span>
                                 <div class="info">
-                                    <strong>Phone</strong>
+                                    <strong>Helpline No.</strong>
                                     <p><a href="tel:<?php echo str_replace([' ', '-', '(', ')'], '', $contact_info['phone_number']); ?>"><?php echo htmlspecialchars($contact_info['phone_number']); ?></a></p>
                                 </div>
                             </div>
-                            <?php endif; ?>
                             
-                            <?php if (!empty($contact_info['email'])): ?>
                             <div class="contact-item">
                                 <span class="icon">✉️</span>
                                 <div class="info">
@@ -101,17 +137,22 @@
                                     <p><a href="mailto:<?php echo htmlspecialchars($contact_info['email']); ?>"><?php echo htmlspecialchars($contact_info['email']); ?></a></p>
                                 </div>
                             </div>
-                            <?php endif; ?>
                             
-                            <?php if (!empty($contact_info['visit_us_text'])): ?>
+                            <div class="contact-item">
+                                <span class="icon">🌐</span>
+                                <div class="info">
+                                    <strong>Website</strong>
+                                    <p><a href="https://www.live18india.in" target="_blank">www.live18india.in</a></p>
+                                </div>
+                            </div>
+                            
                             <div class="contact-item">
                                 <span class="icon">🏢</span>
                                 <div class="info">
                                     <strong>Visit Us</strong>
-                                    <p><?php echo nl2br(htmlspecialchars($contact_info['visit_us_text'])); ?></p>
+                                    <p><?php echo htmlspecialchars($contact_info['visit_us_text']); ?></p>
                                 </div>
                             </div>
-                            <?php endif; ?>
                         </div>
                         
                         <?php if (!empty($contact_info['map_embed_url'])): ?>

@@ -783,7 +783,294 @@ footer::before {
   color: #fff;
 }
 
-/* Links Grid */
+/* Sitemap Page Styles */
+.sitemap-page {
+  padding: 40px 0;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  min-height: 80vh;
+}
+
+.sitemap-header {
+  text-align: center;
+  margin-bottom: 50px;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
+  color: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(229, 57, 53, 0.3);
+}
+
+.sitemap-header h1 {
+  font-size: 3rem;
+  margin-bottom: 15px;
+  font-weight: 800;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.sitemap-description {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  opacity: 0.95;
+}
+
+.sitemap-stats {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 30px;
+}
+
+.stat-item {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.stat-number {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: #fff;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.9;
+  margin-top: 5px;
+}
+
+.breadcrumb {
+  margin-bottom: 30px;
+}
+
+.breadcrumb ol {
+  display: flex;
+  list-style: none;
+  padding: 15px 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin: 0;
+}
+
+.breadcrumb li {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb li:not(:last-child)::after {
+  content: '→';
+  margin: 0 15px;
+  color: #666;
+  font-weight: bold;
+}
+
+.breadcrumb a {
+  color: #e53935;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+.breadcrumb a:hover {
+  color: #c62828;
+}
+
+.xml-sitemap-notice {
+  background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+  color: white;
+  padding: 25px;
+  border-radius: 15px;
+  margin-bottom: 40px;
+  text-align: center;
+  box-shadow: 0 5px 20px rgba(76, 175, 80, 0.3);
+}
+
+.xml-sitemap-notice h2 {
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+}
+
+.xml-sitemap-notice a {
+  color: #fff;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.xml-sitemap-notice a:hover {
+  color: #c8e6c9;
+}
+
+.sitemap-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+  margin-bottom: 50px;
+}
+
+.sitemap-section {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  border-top: 4px solid #e53935;
+}
+
+.sitemap-section:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.sitemap-section h2 {
+  color: #e53935;
+  font-size: 1.4rem;
+  margin-bottom: 20px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sitemap-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sitemap-links li {
+  margin-bottom: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sitemap-links li:last-child {
+  border-bottom: none;
+}
+
+.sitemap-links a {
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.sitemap-links a:hover {
+  color: #e53935;
+  transform: translateX(5px);
+}
+
+.sitemap-date {
+  font-size: 0.85rem;
+  color: #666;
+  background: #f8f9fa;
+  padding: 4px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+.sitemap-footer-note {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  border-left: 5px solid #e53935;
+}
+
+.sitemap-footer-note p {
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.sitemap-footer-note a {
+  color: #e53935;
+  font-weight: bold;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .sitemap-header h1 {
+    font-size: 2rem;
+  }
+  
+  .sitemap-description {
+    font-size: 1rem;
+  }
+  
+  .sitemap-stats {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .stat-item {
+    padding: 15px;
+  }
+  
+  .stat-number {
+    font-size: 2rem;
+  }
+  
+  .sitemap-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .sitemap-section {
+    padding: 20px;
+  }
+  
+  .breadcrumb ol {
+    padding: 10px 15px;
+  }
+  
+  .sitemap-links li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  
+  .sitemap-date {
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .sitemap-page {
+    padding: 20px 0;
+  }
+  
+  .sitemap-header {
+    padding: 30px 15px;
+    margin-bottom: 30px;
+  }
+  
+  .sitemap-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .sitemap-section {
+    padding: 15px;
+  }
+  
+  .xml-sitemap-notice {
+    padding: 20px 15px;
+  }
+}
 .footer-links-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;

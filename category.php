@@ -5,13 +5,90 @@ require_once 'config/functions.php';
 $conn = getConnection();
 
 // Check category before including header
-$slug = $_GET['slug'] ?? '';
-$category = $conn->query("SELECT * FROM categories WHERE slug = '$slug'")->fetch_assoc();
+$category_id = $_GET['id'] ?? '';
+$category = null;
+if ($category_id) {
+    $stmt = $conn->prepare("SELECT * FROM categories WHERE id = ?");
+    $stmt->bind_param("i", $category_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $category = $result->fetch_assoc();
+}
 
 if (!$category) {
     header('Location: index.php');
     exit;
 }
+
+// SEO Meta Data for Category Page
+$pageTitle = "{$category['name']} News - Latest Updates & Breaking News | Live 18 India";
+$pageDescription = "Get latest {$category['name']} news, updates and breaking news from Live 18 India. Stay informed with comprehensive coverage of {$category['name']} related stories and developments.";
+$pageKeywords = "{$category['name']} news, {$category['name']} updates, {$category['name']} breaking news, Live 18 India {$category['name']}, latest {$category['name']} news";
+$canonicalUrl = "https://live18india.com/category.php?id={$category['id']}";
+
+// Open Graph Meta Tags
+$ogTitle = "{$category['name']} News - Live 18 India";
+$ogDescription = "Latest {$category['name']} news and updates from India's most trusted news source. Comprehensive coverage of all {$category['name']} related stories.";
+$ogImage = "https://live18india.com/assets/images/category-{$category['slug']}.jpg";
+$ogUrl = $canonicalUrl;
+$ogType = "website";
+
+// Twitter Card Meta Tags
+$twitterTitle = $ogTitle;
+$twitterDescription = $ogDescription;
+$twitterImage = $ogImage;
+
+// Schema.org JSON-LD for Category Page
+$schemaData = [
+    "@context" => "https://schema.org",
+    "@type" => "CollectionPage",
+    "name" => "{$category['name']} News - Live 18 India",
+    "description" => $pageDescription,
+    "url" => $canonicalUrl,
+    "mainEntity" => [
+        "@type" => "ItemList",
+        "name" => "{$category['name']} News Articles",
+        "description" => "Collection of {$category['name']} news articles from Live 18 India"
+    ],
+    "publisher" => [
+        "@type" => "NewsMediaOrganization",
+        "name" => "Live 18 India",
+        "url" => "https://live18india.com"
+    ],
+    "breadcrumb" => [
+        "@type" => "BreadcrumbList",
+        "itemListElement" => [
+            [
+                "@type" => "ListItem",
+                "position" => 1,
+                "name" => "Home",
+                "item" => "https://live18india.com"
+            ],
+            [
+                "@type" => "ListItem",
+                "position" => 2,
+                "name" => "Categories",
+                "item" => "https://live18india.com/#categories"
+            ],
+            [
+                "@type" => "ListItem",
+                "position" => 3,
+                "name" => $category['name']
+            ]
+        ]
+    ]
+];
+
+// Set page category for analytics
+$pageCategory = 'category_page';
+
+include 'includes/header.php';
+?>
+
+<!-- Schema.org JSON-LD for Category Page -->
+<script type="application/ld+json">
+<?php echo json_encode($schemaData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES); ?>
+</script>
 
 // Now include header after validation
 include 'includes/header.php';

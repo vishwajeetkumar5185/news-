@@ -1,6 +1,66 @@
 <?php 
+// SEO Meta Data for Videos Page
+$pageTitle = "Latest Videos - News Videos & Live Coverage | Live 18 India";
+$pageDescription = "Watch latest news videos, live coverage, and exclusive video content from Live 18 India. Get video updates on breaking news, politics, sports, entertainment, and more.";
+$pageKeywords = "news videos, live coverage, video news, Live 18 India videos, breaking news videos, politics videos, sports videos, entertainment videos, live streaming";
+$canonicalUrl = "https://live18india.com/videos.php";
+
+// Open Graph Meta Tags
+$ogTitle = "Latest News Videos & Live Coverage - Live 18 India";
+$ogDescription = "Watch exclusive news videos and live coverage from India's most trusted news source. Get video updates on all major news events.";
+$ogImage = "https://live18india.com/assets/images/videos-page.jpg";
+$ogUrl = $canonicalUrl;
+$ogType = "website";
+
+// Twitter Card Meta Tags
+$twitterTitle = $ogTitle;
+$twitterDescription = $ogDescription;
+$twitterImage = $ogImage;
+
+// Schema.org JSON-LD for Videos Page
+$schemaData = [
+    "@context" => "https://schema.org",
+    "@type" => "VideoGallery",
+    "name" => "Latest Videos - Live 18 India",
+    "description" => $pageDescription,
+    "url" => $canonicalUrl,
+    "publisher" => [
+        "@type" => "NewsMediaOrganization",
+        "name" => "Live 18 India",
+        "url" => "https://live18india.com",
+        "logo" => [
+            "@type" => "ImageObject",
+            "url" => "https://live18india.com/assets/images/logo.png"
+        ]
+    ],
+    "breadcrumb" => [
+        "@type" => "BreadcrumbList",
+        "itemListElement" => [
+            [
+                "@type" => "ListItem",
+                "position" => 1,
+                "name" => "Home",
+                "item" => "https://live18india.com"
+            ],
+            [
+                "@type" => "ListItem",
+                "position" => 2,
+                "name" => "Videos"
+            ]
+        ]
+    ]
+];
+
+// Set page category for analytics
+$pageCategory = 'videos_page';
+
 include 'includes/header.php';
 ?>
+
+<!-- Schema.org JSON-LD for Videos Page -->
+<script type="application/ld+json">
+<?php echo json_encode($schemaData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES); ?>
+</script>
 
 <div class="videos-page">
     <div class="container">

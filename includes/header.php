@@ -8,15 +8,96 @@ $categories = getCategories($conn);
 <!DOCTYPE html>
 <html lang="hi">
 <head>
+    <!-- Google Search Console Verification -->
+    <meta name="google-site-verification" content="fYqxgsFo-6ihd8B1achRBYZKptail6r1ubui6OKCmDo" />
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5062126875706614"
+     crossorigin="anonymous"></script>
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G14C56RN9E"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        
+        gtag('config', 'G-G14C56RN9E', {
+            // Enhanced tracking options
+            'send_page_view': true,
+            'anonymize_ip': true,
+            'allow_google_signals': true,
+            'allow_ad_personalization_signals': true
+        });
+        
+        // Custom events for news portal
+        function trackNewsView(articleId, category, title) {
+            gtag('event', 'news_article_view', {
+                'article_id': articleId,
+                'article_category': category,
+                'article_title': title,
+                'event_category': 'News',
+                'event_label': 'Article View'
+            });
+        }
+        
+        function trackVideoPlay(videoId, videoTitle) {
+            gtag('event', 'video_play', {
+                'video_id': videoId,
+                'video_title': videoTitle,
+                'event_category': 'Video',
+                'event_label': 'Video Play'
+            });
+        }
+        
+        function trackSearch(searchTerm, resultsCount) {
+            gtag('event', 'search', {
+                'search_term': searchTerm,
+                'results_count': resultsCount,
+                'event_category': 'Search',
+                'event_label': 'Site Search'
+            });
+        }
+        
+        function trackSocialShare(platform, url, title) {
+            gtag('event', 'share', {
+                'method': platform,
+                'content_type': 'article',
+                'item_id': url,
+                'content_title': title,
+                'event_category': 'Social',
+                'event_label': 'Share Article'
+            });
+        }
+        
+        function trackContactForm(formType) {
+            gtag('event', 'form_submit', {
+                'form_type': formType,
+                'event_category': 'Contact',
+                'event_label': 'Form Submission'
+            });
+        }
+        
+        // Track page category for better segmentation
+        <?php if (isset($pageCategory)): ?>
+        gtag('config', 'G-G14C56RN9E', {
+            'custom_map': {'custom_parameter_1': 'page_category'}
+        });
+        gtag('event', 'page_view', {
+            'custom_parameter_1': '<?php echo $pageCategory; ?>'
+        });
+        <?php endif; ?>
+    </script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- Dynamic Title -->
-    <title><?php echo $settings['site_name'] ?? 'Live 18 India - Breaking News, Latest Updates 24x7'; ?></title>
+    <title><?php echo isset($pageTitle) ? $pageTitle : 'live18 इंडिया LIVE TV - Latest India News, Breaking News in Hindi'; ?></title>
     
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Live 18 India - Your trusted source for breaking news, latest updates, and live coverage 24x7. Get India news, world news, sports, entertainment, business updates and more.">
-    <meta name="keywords" content="Live 18 India, India news, breaking news, latest news, live news 24x7, Hindi news, English news, sports news, entertainment news, business news, world news, politics, technology">
+    <meta name="description" content="<?php echo isset($pageDescription) ? $pageDescription : 'Live 18 India LIVE TV Streaming: Latest India News, Breaking News in Hindi, आज की ताज़ा ख़बरें, हिंदी न्यूज़ लाइव, देश-दुनिया समाचार, राजनीति, खेल, मनोरंजन — देखें Live 18 India लाइव।'; ?>">
+    <meta name="keywords" content="<?php echo isset($pageKeywords) ? $pageKeywords : 'live18 india, live tv, hindi news, breaking news, india news, latest news, ताज़ा खबरें, हिंदी न्यूज़, लाइव टीवी, देश समाचार, दुनिया समाचार, राजनीति, खेल, मनोरंजन, live streaming'; ?>">
     <meta name="author" content="Live 18 India">
     <meta name="robots" content="index, follow">
     <meta name="language" content="Hindi, English">
@@ -55,14 +136,12 @@ $categories = getCategories($conn);
     <link rel="canonical" href="<?php echo 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>">
     
     <!-- Favicon -->
-    <?php if (!empty($settings['logo'])): ?>
-        <link rel="icon" type="image/x-icon" href="uploads/<?php echo $settings['logo']; ?>">
-        <link rel="shortcut icon" type="image/x-icon" href="uploads/<?php echo $settings['logo']; ?>">
-        <link rel="apple-touch-icon" href="uploads/<?php echo $settings['logo']; ?>">
-    <?php else: ?>
-        <!-- SVG Favicon for LIVE18 -->
-        <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23000'/><text x='10' y='35' font-family='Arial' font-size='20' font-weight='900' fill='%23fff'>LIVE</text><rect x='0' y='50' width='100' height='50' fill='%23e53935'/><text x='25' y='85' font-family='Arial' font-size='35' font-weight='900' fill='%23fff'>18</text></svg>">
-    <?php endif; ?>
+    <link rel="icon" type="image/jpeg" href="uploads/icon.jpeg">
+    <link rel="shortcut icon" type="image/jpeg" href="uploads/icon.jpeg">
+    <link rel="apple-touch-icon" href="uploads/icon.jpeg">
+    <link rel="apple-touch-icon" sizes="180x180" href="uploads/icon.jpeg">
+    <link rel="icon" type="image/jpeg" sizes="32x32" href="uploads/icon.jpeg">
+    <link rel="icon" type="image/jpeg" sizes="16x16" href="uploads/icon.jpeg">
     
     <!-- Preconnect for Performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

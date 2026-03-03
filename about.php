@@ -1,6 +1,53 @@
 <?php 
+// SEO Meta Data for About Page
+$pageTitle = "About Live 18 India - India's Most Trusted News Portal | Our Story";
+$pageDescription = "Learn about Live 18 India - India's most trusted news portal. Discover our mission, vision, and commitment to delivering accurate, unbiased news coverage 24x7 across India.";
+$pageKeywords = "About Live 18 India, news portal, trusted news, India news channel, our story, mission, vision, journalism, news coverage, media house";
+$canonicalUrl = "https://live18india.com/about.php";
+
+// Open Graph Meta Tags
+$ogTitle = "About Live 18 India - India's Most Trusted News Portal";
+$ogDescription = "Discover the story behind Live 18 India - India's most trusted news source. Learn about our mission to deliver accurate, unbiased news coverage 24x7.";
+$ogImage = "https://live18india.com/assets/images/about-live18.jpg";
+$ogUrl = $canonicalUrl;
+$ogType = "website";
+
+// Twitter Card Meta Tags
+$twitterTitle = $ogTitle;
+$twitterDescription = $ogDescription;
+$twitterImage = $ogImage;
+
+// Schema.org JSON-LD for About Page
+$schemaData = [
+    "@context" => "https://schema.org",
+    "@type" => "AboutPage",
+    "name" => "About Live 18 India",
+    "description" => $pageDescription,
+    "url" => $canonicalUrl,
+    "mainEntity" => [
+        "@type" => "NewsMediaOrganization",
+        "name" => "Live 18 India",
+        "description" => "India's most trusted news portal providing breaking news and live coverage 24x7",
+        "foundingDate" => "2020",
+        "founder" => [
+            "@type" => "Person",
+            "name" => "Live 18 India Team"
+        ],
+        "mission" => "To provide accurate, unbiased, and timely news coverage to the people of India",
+        "knowsAbout" => ["News", "Journalism", "Breaking News", "Live Coverage", "India News"]
+    ]
+];
+
+// Set page category for analytics
+$pageCategory = 'about_page';
+
 include 'includes/header.php';
 ?>
+
+<!-- Schema.org JSON-LD for About Page -->
+<script type="application/ld+json">
+<?php echo json_encode($schemaData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES); ?>
+</script>
 
 <div class="about-page">
     <!-- Hero Section with Background -->

@@ -1,4 +1,69 @@
-<?php include 'includes/header.php'; ?>
+<?php
+// SEO Meta Data for Homepage
+$pageTitle = "live18 इंडिया LIVE TV - Latest India News, Breaking News in Hindi";
+$pageDescription = "Live 18 India LIVE TV Streaming: Latest India News, Breaking News in Hindi, आज की ताज़ा ख़बरें, हिंदी न्यूज़ लाइव, देश-दुनिया समाचार, राजनीति, खेल, मनोरंजन — देखें Live 18 India लाइव।";
+$pageKeywords = "live18 india, live tv, hindi news, breaking news, india news, latest news, ताज़ा खबरें, हिंदी न्यूज़, लाइव टीवी, देश समाचार, दुनिया समाचार, राजनीति, खेल, मनोरंजन, live streaming, live18india.com";
+$canonicalUrl = "https://live18india.com/";
+
+// Open Graph Meta Tags
+$ogTitle = "live18 इंडिया LIVE TV - Latest India News, Breaking News in Hindi";
+$ogDescription = "Live 18 India LIVE TV Streaming: आज की ताज़ा ख़बरें, हिंदी न्यूज़ लाइव, देश-दुनिया समाचार, राजनीति, खेल, मनोरंजन — देखें Live 18 India लाइव।";
+$ogImage = "https://live18india.com/assets/images/live18-homepage.jpg";
+$ogUrl = $canonicalUrl;
+$ogType = "website";
+
+// Twitter Card Meta Tags
+$twitterTitle = $ogTitle;
+$twitterDescription = $ogDescription;
+$twitterImage = $ogImage;
+
+// Schema.org JSON-LD for Homepage
+$schemaData = [
+    "@context" => "https://schema.org",
+    "@type" => "NewsMediaOrganization",
+    "name" => "live18 इंडिया LIVE TV",
+    "alternateName" => "Live 18 India",
+    "url" => "https://live18india.com",
+    "logo" => [
+        "@type" => "ImageObject",
+        "url" => "https://live18india.com/assets/images/logo.png",
+        "width" => 200,
+        "height" => 60
+    ],
+    "description" => "Live 18 India LIVE TV Streaming: Latest India News, Breaking News in Hindi, आज की ताज़ा ख़बरें, हिंदी न्यूज़ लाइव, देश-दुनिया समाचार, राजनीति, खेल, मनोरंजन",
+    "foundingDate" => "2020",
+    "sameAs" => [
+        "https://facebook.com/live18india",
+        "https://twitter.com/live18india",
+        "https://instagram.com/live18india",
+        "https://youtube.com/live18india"
+    ],
+    "contactPoint" => [
+        "@type" => "ContactPoint",
+        "telephone" => "+91 8070111786",
+        "email" => "live18india2020@gmail.com",
+        "contactType" => "customer service",
+        "availableLanguage" => ["Hindi", "English"]
+    ],
+    "address" => [
+        "@type" => "PostalAddress",
+        "streetAddress" => "Office No. 003, New Raval Nagar, Building No. B, Behind Hardik Palace Hotel",
+        "addressLocality" => "Mira Road East",
+        "addressRegion" => "Thane, Maharashtra",
+        "postalCode" => "401107",
+        "addressCountry" => "IN"
+    ]
+];
+
+// Set page category for analytics
+$pageCategory = 'homepage';
+
+include 'includes/header.php'; ?>
+
+<!-- Schema.org JSON-LD for Homepage -->
+<script type="application/ld+json">
+<?php echo json_encode($schemaData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES); ?>
+</script>
 
 <div class="home-wrapper">
     <div class="container">

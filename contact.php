@@ -1,9 +1,72 @@
 <?php 
+// SEO Meta Data for Contact Page
+$pageTitle = "Contact Live 18 India - Get in Touch | News Portal Contact Information";
+$pageDescription = "Contact Live 18 India for news tips, feedback, or inquiries. Reach out to India's most trusted news portal. Phone: +91 8070111786, Email: live18india2020@gmail.com";
+$pageKeywords = "Contact Live 18 India, news tips, feedback, contact information, phone number, email, address, get in touch, news portal contact";
+$canonicalUrl = "https://live18india.com/contact.php";
+
+// Open Graph Meta Tags
+$ogTitle = "Contact Live 18 India - Get in Touch with India's Trusted News Portal";
+$ogDescription = "Have a news tip or feedback? Contact Live 18 India team. We're available 24/7 to serve you better. Phone: +91 8070111786";
+$ogImage = "https://live18india.com/assets/images/contact-live18.jpg";
+$ogUrl = $canonicalUrl;
+$ogType = "website";
+
+// Twitter Card Meta Tags
+$twitterTitle = $ogTitle;
+$twitterDescription = $ogDescription;
+$twitterImage = $ogImage;
+
+// Set page category for analytics
+$pageCategory = 'contact_page';
+
 include 'includes/header.php';
 
 // Get dynamic contact information
 $contact_info = $conn->query("SELECT * FROM contact_info WHERE id = 1")->fetch_assoc();
 
+// Schema.org JSON-LD for Contact Page
+$schemaData = [
+    "@context" => "https://schema.org",
+    "@type" => "ContactPage",
+    "name" => "Contact Live 18 India",
+    "description" => $pageDescription,
+    "url" => $canonicalUrl,
+    "mainEntity" => [
+        "@type" => "NewsMediaOrganization",
+        "name" => "Live 18 India",
+        "contactPoint" => [
+            "@type" => "ContactPoint",
+            "telephone" => "+91 8070111786",
+            "email" => "live18india2020@gmail.com",
+            "contactType" => "customer service",
+            "availableLanguage" => ["Hindi", "English"],
+            "hoursAvailable" => [
+                "@type" => "OpeningHoursSpecification",
+                "dayOfWeek" => ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                "opens" => "00:00",
+                "closes" => "23:59"
+            ]
+        ],
+        "address" => [
+            "@type" => "PostalAddress",
+            "streetAddress" => "Office No. 003, New Raval Nagar, Building No. B, Behind Hardik Palace Hotel, Station Road",
+            "addressLocality" => "Mira Road East",
+            "addressRegion" => "Thane, Maharashtra",
+            "postalCode" => "401107",
+            "addressCountry" => "IN"
+        ]
+    ]
+];
+?>
+
+<!-- Schema.org JSON-LD for Contact Page -->
+<script type="application/ld+json">
+<?php echo json_encode($schemaData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES); ?>
+</script>
+
+<?php
+// Handle form submission
 $success = '';
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -120,6 +183,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
                     </button>
                 </form>
+                
+                <!-- Contact Form Tracking -->
+                <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const contactForm = document.querySelector('.modern-contact-form');
+                    if (contactForm) {
+                        contactForm.addEventListener('submit', function(e) {
+                            // Track form submission
+                            trackContactForm('contact_inquiry');
+                            
+                            gtag('event', 'generate_lead', {
+                                'currency': 'INR',
+                                'value': 1,
+                                'event_category': 'Contact',
+                                'event_label': 'Contact Form Submit'
+                            });
+                        });
+                    }
+                });
+                </script>
             </div>
 
             <!-- Contact Details Sidebar -->

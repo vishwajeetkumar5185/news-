@@ -2,9 +2,50 @@
 require_once 'config/database.php';
 require_once 'config/functions.php';
 
-$pageTitle = "Privacy Policy - Live 18 India";
+// SEO Meta Data for Privacy Policy
+$pageTitle = "Privacy Policy - Live 18 India | Data Protection & User Privacy";
+$pageDescription = "Read Live 18 India's Privacy Policy to understand how we collect, use, and protect your personal information. Learn about our commitment to user privacy and data security.";
+$pageKeywords = "privacy policy, data protection, user privacy, Live 18 India privacy, personal information, data security, cookies policy";
+$canonicalUrl = "https://live18india.com/privacy-policy.php";
+
+// Open Graph Meta Tags
+$ogTitle = "Privacy Policy - Live 18 India";
+$ogDescription = "Learn about Live 18 India's commitment to protecting your privacy and personal information. Read our comprehensive privacy policy.";
+$ogImage = "https://live18india.com/assets/images/privacy-policy.jpg";
+$ogUrl = $canonicalUrl;
+$ogType = "website";
+
+// Twitter Card Meta Tags
+$twitterTitle = $ogTitle;
+$twitterDescription = $ogDescription;
+$twitterImage = $ogImage;
+
+// Schema.org JSON-LD for Privacy Policy
+$schemaData = [
+    "@context" => "https://schema.org",
+    "@type" => "WebPage",
+    "name" => "Privacy Policy",
+    "description" => $pageDescription,
+    "url" => $canonicalUrl,
+    "publisher" => [
+        "@type" => "NewsMediaOrganization",
+        "name" => "Live 18 India",
+        "url" => "https://live18india.com"
+    ],
+    "dateModified" => date('c'),
+    "inLanguage" => "en-IN"
+];
+
+// Set page category for analytics
+$pageCategory = 'privacy_policy';
+
 include 'includes/header.php';
 ?>
+
+<!-- Schema.org JSON-LD for Privacy Policy -->
+<script type="application/ld+json">
+<?php echo json_encode($schemaData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES); ?>
+</script>
 
 <div class="legal-page">
     <div class="container">

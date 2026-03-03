@@ -2,9 +2,50 @@
 require_once 'config/database.php';
 require_once 'config/functions.php';
 
-$pageTitle = "Cookie Policy - Live 18 India";
+// SEO Meta Data for Cookie Policy
+$pageTitle = "Cookie Policy - Live 18 India | Website Cookies & Tracking";
+$pageDescription = "Learn about Live 18 India's Cookie Policy. Understand how we use cookies and tracking technologies to improve your browsing experience and website functionality.";
+$pageKeywords = "cookie policy, cookies, tracking, website cookies, Live 18 India cookies, browser cookies, privacy, data tracking";
+$canonicalUrl = "https://live18india.com/cookie-policy.php";
+
+// Open Graph Meta Tags
+$ogTitle = "Cookie Policy - Live 18 India";
+$ogDescription = "Understand how Live 18 India uses cookies and tracking technologies. Read our comprehensive cookie policy for transparency.";
+$ogImage = "https://live18india.com/assets/images/cookie-policy.jpg";
+$ogUrl = $canonicalUrl;
+$ogType = "website";
+
+// Twitter Card Meta Tags
+$twitterTitle = $ogTitle;
+$twitterDescription = $ogDescription;
+$twitterImage = $ogImage;
+
+// Schema.org JSON-LD for Cookie Policy
+$schemaData = [
+    "@context" => "https://schema.org",
+    "@type" => "WebPage",
+    "name" => "Cookie Policy",
+    "description" => $pageDescription,
+    "url" => $canonicalUrl,
+    "publisher" => [
+        "@type" => "NewsMediaOrganization",
+        "name" => "Live 18 India",
+        "url" => "https://live18india.com"
+    ],
+    "dateModified" => date('c'),
+    "inLanguage" => "en-IN"
+];
+
+// Set page category for analytics
+$pageCategory = 'cookie_policy';
+
 include 'includes/header.php';
 ?>
+
+<!-- Schema.org JSON-LD for Cookie Policy -->
+<script type="application/ld+json">
+<?php echo json_encode($schemaData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES); ?>
+</script>
 
 <div class="legal-page">
     <div class="container">
